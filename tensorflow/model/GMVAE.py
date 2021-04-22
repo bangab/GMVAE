@@ -438,7 +438,7 @@ class GMVAE:
       
       gaussian = np.zeros((data.shape[0], self.gaussian_size))
       for j in range(num_batches):
-        features[j*batch_size:j*batch_size + batch_size] = self.sess.run(encoder,
+        gaussian[j*batch_size:j*batch_size + batch_size] = self.sess.run(encoder,
                                                                         feed_dict={self.network.temperature: self.temperature
                                                                                   ,self.learning_rate: self.lr})
       return gaussian
