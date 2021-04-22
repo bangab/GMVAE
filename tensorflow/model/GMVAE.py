@@ -413,7 +413,35 @@ class GMVAE:
       
       return avg_accuracy, avg_nmi
     
+    def latent_features(self, data, batch_size=-1):
+      """Obtain latent features learnt by the model
+      Args:
+          data: (array) corresponding array containing the data
+          batch_size: (int) size of each batch to consider from the data
+      Returns:
+          features: (array) array containing the features from the data
+      """
+      # if batch_size is not specified then use all data
+      if batch_size == -1:
+        batch_size = data.shape[0]
+      
+      # create dataset  
+      dataset = self.create_dataset(False, data, None, batch_size)
 
+      # we will use only the encoder network
+      latent = self.network.encoder(dataset['data'], self.num_classes)
+      encoder = latent['gaussian']
+      
+      # obtain the features from the input data
+      self.sess.run(dataset['iterator_init'])      
+      num_batches = data.shape[0] // batch_size
+      
+      gaussian = np.zeros((data.shape[0], self.gaussian_size))
+      for j in range(num_batches):
+        features[j*batch_size:j*batch_size + batch_size] = self.sess.run(encoder,
+                                                                        feed_dict={self.network.temperature: self.temperature
+                                                                                  ,self.learning_rate: self.lr})
+      return gaussian
     def latent_features(self, data, batch_size=-1):
       """Obtain latent features learnt by the model
 
