@@ -413,7 +413,7 @@ class GMVAE:
       
       return avg_accuracy, avg_nmi
     
-    def latent_features(self, data, batch_size=-1):
+    def latent_gaussian(self, data, batch_size=-1):
       """Obtain latent features learnt by the model
       Args:
           data: (array) corresponding array containing the data
