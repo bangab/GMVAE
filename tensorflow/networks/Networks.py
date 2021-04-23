@@ -116,7 +116,7 @@ class Networks:
         log_prob = tf.log(prob + self.eps)
         
         # defining layers to learn the gaussian distribution
-        concat = tf.concat([categorical, input_data], 3)
+        concat = tf.concat([categorical, input_data], 1)
         concat = tf.layers.dense(concat, units=512)
         concat = tf.nn.relu(concat)
         concat = tf.layers.dense(concat, units=512)
