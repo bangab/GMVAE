@@ -99,7 +99,8 @@ class Networks:
         x = BatchNormalization()(x)
         x = MaxPooling2D((2, 2))(x)    
         out = Flatten()(x)
-        
+        out=tf.layers.dense(out,units=512)(out)
+        out = tf.nn.relu(out)
         
         
         
@@ -176,20 +177,20 @@ class Networks:
         X = Conv2DTranspose(32, (3, 3), padding='same', activation='relu')(x)
         x = BatchNormalization()(x)
         out = Conv2DTranspose(3, (3, 3), activation='sigmoid', padding='same')(x)
+        out = Dense(out, units=512)
         
         
         
         
         
         
-        #out = tf.layers.dense(gaussian, units=512)
-        #out = tf.nn.relu(out)
+        
         #out = tf.layers.dense(out, units=512)
         #out = tf.nn.relu(out)
         #out = tf.layers.dense(out, units=output_size)
-        #if self.loss_type == 'bce':
-        #reconstructed = tf.nn.sigmoid(out)
-        #else:
+        if self.loss_type == 'bce':
+           reconstructed = tf.nn.sigmoid(out)
+        else:
         reconstructed = out
       return out, reconstructed
     
