@@ -100,8 +100,8 @@ class Networks:
         x = BatchNormalization()(x)
         x = MaxPooling2D((2, 2))(x)    
         out = Flatten()(x)
-        out= Dense(512)(out)
-        out = relu(out)
+        out= Dense(512,activation='relu')(out)
+        #out = relu(out)
         
         
         
