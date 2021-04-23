@@ -192,7 +192,7 @@ class Networks:
         if self.loss_type == 'bce':
            reconstructed = tf.nn.sigmoid(out)
         else:
-        reconstructed = out
+           reconstructed = out
       return out, reconstructed
     
     
