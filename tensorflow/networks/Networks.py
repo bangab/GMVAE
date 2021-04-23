@@ -86,6 +86,7 @@ class Networks:
       #reuse = len(tf.get_collection(tf.GraphKeys.VARIABLES, scope='encoder_fc')) > 0
       with tf.variable_scope('encoder_fc', reuse=not is_training):
         out = input_data
+        out = Reshape((128, 128, 3))(out)
         x = Conv2D(32, (3, 3), padding='same', activation='relu')(out)
         x = BatchNormalization()(x)
         x = MaxPooling2D((2, 2))(x)    
