@@ -6,7 +6,8 @@
 Gaussian Mixture Variational Autoencoder Networks
 
 """
-
+from tensorflow.keras.layers import Input, Conv2D, Dropout, BatchNormalization, MaxPooling2D
+from tensorflow.keras.layers import Flatten, Dense, Lambda, UpSampling2D, Conv2DTranspose, Reshape
 import tensorflow as tf
 
 class Networks:
@@ -85,12 +86,28 @@ class Networks:
       #reuse = len(tf.get_collection(tf.GraphKeys.VARIABLES, scope='encoder_fc')) > 0
       with tf.variable_scope('encoder_fc', reuse=not is_training):
         out = input_data
+        x = Conv2D(32, (3, 3), padding='same', activation='relu')(out)
+        x = BatchNormalization()(x)
+        x = MaxPooling2D((2, 2))(x)    
+        x = Conv2D(32, (3, 3), padding='same', activation='relu')(x)
+        x = BatchNormalization()(x)
+        x = MaxPooling2D((2, 2))(x)   
+        x = Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+        x = BatchNormalization()(x)
+        x = MaxPooling2D((2, 2))(x)   
+        x = Conv2D(64, (3, 3), padding='same', activation='relu')(x)
+        x = BatchNormalization()(x)
+        x = MaxPooling2D((2, 2))(x)    
+        out = Flatten()(x)
+        
+        
+        
         
         # encoding from input image to deterministic features
-        out = tf.layers.dense(out, units=512)
-        out = tf.nn.relu(out)
-        out = tf.layers.dense(out, units=512)
-        out = tf.nn.relu(out)
+        #out = tf.layers.dense(out, units=512)
+        #out = tf.nn.relu(out)
+        #out = tf.layers.dense(out, units=512)
+        #out = tf.nn.relu(out)
 
         # defining layers to learn the categorical distribution
         logits = tf.layers.dense(out, units=num_classes)
@@ -144,15 +161,36 @@ class Networks:
       """
       with tf.variable_scope('decoder_gauss', reuse=not is_training):                
         # define layers to generate output given a gaussian variable
-        out = tf.layers.dense(gaussian, units=512)
-        out = tf.nn.relu(out)
-        out = tf.layers.dense(out, units=512)
-        out = tf.nn.relu(out)
-        out = tf.layers.dense(out, units=output_size)
-        if self.loss_type == 'bce':
-          reconstructed = tf.nn.sigmoid(out)
-        else:
-          reconstructed = out
+        x = Dense(8 * 8 * 128)(gaussian)
+        x = Reshape((8, 8, 128))(x)
+        x = UpSampling2D((2, 2))(x)
+        X = Conv2DTranspose(64, (3, 3), padding='same', activation='relu')(x)
+        x = BatchNormalization()(x)
+        x = UpSampling2D((2, 2))(X)
+        X = Conv2DTranspose(64, (3, 3), padding='same', activation='relu')(x)
+        x = BatchNormalization()(x)
+        x = UpSampling2D((2, 2))(x)
+        X = Conv2DTranspose(32, (3, 3), padding='same', activation='relu')(x)
+        x = BatchNormalization()(x)
+        x = UpSampling2D((2, 2))(x)
+        X = Conv2DTranspose(32, (3, 3), padding='same', activation='relu')(x)
+        x = BatchNormalization()(x)
+        out = Conv2DTranspose(3, (3, 3), activation='sigmoid', padding='same')(x)
+        
+        
+        
+        
+        
+        
+        #out = tf.layers.dense(gaussian, units=512)
+        #out = tf.nn.relu(out)
+        #out = tf.layers.dense(out, units=512)
+        #out = tf.nn.relu(out)
+        #out = tf.layers.dense(out, units=output_size)
+        #if self.loss_type == 'bce':
+        #reconstructed = tf.nn.sigmoid(out)
+        #else:
+        reconstructed = out
       return out, reconstructed
     
     
