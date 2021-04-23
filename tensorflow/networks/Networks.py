@@ -178,14 +178,9 @@ class Networks:
         X = Conv2DTranspose(32, (3, 3), padding='same', activation='relu')(x)
         x = BatchNormalization()(x)
         out = Conv2DTranspose(3, (3, 3), activation='sigmoid', padding='same')(x)
-        out = Dense(out, units=512)
-        
-        
-        
-        
-        
-        
-        
+        #out = Dense(out, units=512)
+        out= Dense(512,activation='relu')(out)
+        out= Dense(output_size)(out)
         #out = tf.layers.dense(out, units=512)
         #out = tf.nn.relu(out)
         #out = tf.layers.dense(out, units=output_size)
