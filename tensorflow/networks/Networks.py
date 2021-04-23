@@ -193,7 +193,7 @@ class Networks:
            reconstructed = tf.nn.sigmoid(out)
         else:
            reconstructed = out
-        return out, reconstructed
+      return out, reconstructed
     
     
     def decoder_fc(self, gaussian, categorical, output_size, is_training=False):
