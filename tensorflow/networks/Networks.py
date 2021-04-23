@@ -100,8 +100,8 @@ class Networks:
         x = BatchNormalization()(x)
         x = MaxPooling2D((2, 2))(x)    
         out = Flatten()(x)
-        out=tf.layers.dense(out,units=512)(out)
-        out = tf.nn.relu(out)
+        out= Dense(512)(out)
+        out = relu(out)
         
         
         
