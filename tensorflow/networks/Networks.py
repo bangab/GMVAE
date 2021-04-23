@@ -112,7 +112,7 @@ class Networks:
         #out = tf.nn.relu(out)
 
         # defining layers to learn the categorical distribution
-        logits = tf.layers.dense(out, units=num_classes)
+        logits = Dense(num_classes)(out)
         categorical = self.gumbel_softmax(logits, self.temperature, self.hard_gumbel)
         prob = tf.nn.softmax(logits)
         log_prob = tf.log(prob + self.eps)
