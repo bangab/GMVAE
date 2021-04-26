@@ -87,7 +87,8 @@ class Networks:
       #reuse = len(tf.get_collection(tf.GraphKeys.VARIABLES, scope='encoder_fc')) > 0
       with tf.variable_scope('encoder_fc', reuse=not is_training):
         out = input_data
-        x = tf.reshape((128, 128, 3))(out)
+        x = tf.reshape(out, [128,128,3])
+        #x = tf.reshape((128, 128, 3))(out)
         x = tf.nn.conv2d(32, (3, 3), padding='same', activation='relu')(x)
         x = tf.nn.batch_normalization()(x)
         x = tf.nn.max_pool((2, 2))(x) 
@@ -170,7 +171,8 @@ class Networks:
       """
       with tf.variable_scope('decoder_gauss', reuse=not is_training):                
         # define layers to generate output given a gaussian variable
-        x = tf.layers.dense(8 * 8 * 128)(gaussian)
+        #x = tf.layers.dense(8 * 8 * 128)(gaussian)
+        x = tf.reshape(gaussian, [8*8*128])
         x = tf.reshape((8, 8, 128))(x)
         x = tf.keras.layers.UpSampling2D((2, 2))(x)
         X = tf.nn.conv2d_transpose(64, (3, 3), padding='same', activation='relu')(x)
