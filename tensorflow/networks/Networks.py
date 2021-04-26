@@ -89,7 +89,7 @@ class Networks:
         out = input_data
         x = tf.reshape(out, [128,128,3])
         #x = tf.reshape((128, 128, 3))(out)
-        x = tf.nn.conv2d(32, (3, 3), padding="same")(x)
+        x = tf.nn.conv2d(32, (3, 3),2, padding="same")(x)
         x = tf.nn.relu(x)
         x = tf.nn.batch_normalization()(x)
         x = tf.nn.max_pool((2, 2))(x) 
