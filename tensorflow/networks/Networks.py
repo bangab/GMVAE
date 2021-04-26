@@ -6,6 +6,7 @@
 Gaussian Mixture Variational Autoencoder Networks
 
 """
+import keras
 from tensorflow.keras.layers import Input, Conv2D, Dropout, BatchNormalization, MaxPooling2D
 from tensorflow.keras.layers import Flatten, Dense, Lambda, UpSampling2D, Conv2DTranspose, Reshape
 import tensorflow as tf
@@ -90,22 +91,23 @@ class Networks:
         x = tf.nn.conv2d(32, (3, 3), padding='same', activation='relu')(x)
         x = tf.nn.batch_normalization()(x)
         x = tf.nn.max_pool((2, 2))(x) 
-        x= tf.nn.dropout(0.5)(x)
+        x = tf.nn.dropout(0.5)(x)
         x = tf.nn.conv2d(32, (3, 3), padding='same', activation='relu')(x)
         x = tf.nn.batch_normalization()(x)
         x = tf.nn.max_pool((2, 2))(x)  
-        x= tf.nn.dropout(0.5)(x)
+        x = tf.nn.dropout(0.5)(x)
         x = tf.nn.conv2d(64, (3, 3), padding='same', activation='relu')(x)
         x = tf.nn.batch_normalization()(x)
         x = tf.nn.max_pool((2, 2))(x) 
-        x= tf.nn.dropout(0.5)(x)
+        x = tf.nn.dropout(0.5)(x)
         x = tf.nn.conv2d(64, (3, 3), padding='same', activation='relu')(x)
         x = tf.nn.batch_normalization()(x)
         x = tf.nn.max_pool((2, 2))(x) 
-        x= tf.nn.dropout(0.5)(x)
+        x = tf.nn.dropout(0.5)(x)
         out = tf.layers.flatten()(x)
-        out= tf.layers.dense(1024,activation='relu')(out)
-        #out = relu(out)
+        out = tf.layers.dense(out, units=1024)
+        #out= tf.layers.dense(1024,activation='relu')(out)
+        out = relu(out)
         
         
         
@@ -116,7 +118,8 @@ class Networks:
         #out = tf.nn.relu(out)
 
         # defining layers to learn the categorical distribution
-        logits = tf.layers.dense(num_classes)(out)
+        logits = tf.layers.dense(out, units=num_classes)
+        #logits = tf.layers.dense(num_classes)(out)
         categorical = self.gumbel_softmax(logits, self.temperature, self.hard_gumbel)
         prob = tf.nn.softmax(logits)
         log_prob = tf.log(prob + self.eps)
@@ -183,8 +186,9 @@ class Networks:
         x = tf.nn.batch_normalization()(x)
         out = tf.nn.conv2d_transpose(3, (3, 3), activation='sigmoid', padding='same')(x)
         #out = Dense(out, units=512)
-        out= tf.layers.dense(1024,activation='relu')(out)
-        out= tf.layers.dense(output_size)(out)
+        out= tf.layers.dense(out, units=1024)
+        out = tf.nn.relu(out)
+        out= tf.layers.dense(out, units=output_size)
         #out = tf.layers.dense(out, units=512)
         #out = tf.nn.relu(out)
         #out = tf.layers.dense(out, units=output_size)
