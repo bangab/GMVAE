@@ -30,7 +30,7 @@ class Networks:
         hidden: (array) [batch_size, n_features] features obtained by the encoder
         gaussian_size: (int) size of the gaussian sample vector
         
-      Returns:
+      Return:
         (dict) contains the nodes of the mean, log of variance and gaussian
       """
       out = hidden
